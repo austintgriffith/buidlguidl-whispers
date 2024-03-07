@@ -40,7 +40,7 @@ const scaffoldConfig = {
    */
   walletAutoConnect: true,
 
-  adminAddresses: ["0x34aA3F359A9D614239015126635CE7732c18fDF3"],
+  adminAddresses: ["0x5dCb5f4F39Caa6Ca25380cfc42280330b49d3c93", "0x34aA3F359A9D614239015126635CE7732c18fDF3"],
 } as const satisfies ScaffoldConfig;
 
 export default scaffoldConfig;
