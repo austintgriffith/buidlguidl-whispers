@@ -1,3 +1,4 @@
+packages/nextjs/.env
 node_modules
 
 # dependencies, yarn, etc

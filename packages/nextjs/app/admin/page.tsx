@@ -153,9 +153,10 @@ const AdminHome: NextPage = () => {
     <>
       <div className="flex items-center flex-col flex-grow pt-10">
         <div className="px-5 flex flex-col items-center justify-center">
-          <h1 className="text-center">
-            <span className="block text-4xl font-bold">BuildGuidl Events Tracker Admin</span>
-          </h1>
+          <div className="p-10">
+            <img src="/whispersbig.png" alt="buidlGuidl whispers" style={{ maxWidth: 350 }} />
+          </div>
+
           {connectedAddress ? (
             <>
               <div className="flex justify-center items-center space-x-2">
@@ -164,7 +165,11 @@ const AdminHome: NextPage = () => {
               </div>
               {isLoadingAdmin ? (
                 <div className="flex justify-center items-center space-x-2">
-                  <p className="my-2 font-medium">Checking if you are a member...</p>
+                  <p className="my-2 font-medium">
+                    <span className="loading loading-ring loading-xs"></span> Checking BuidlGuidl Membership...{" "}
+                    <span className="loading loading-ring loading-xs"></span>
+                  </p>
+                  c
                 </div>
               ) : isAdmin ? (
                 <>

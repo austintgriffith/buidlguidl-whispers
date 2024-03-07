@@ -120,10 +120,10 @@ export default function EventPage({ params }: { params: { event: string } }) {
     <>
       <div className="flex items-center flex-col flex-grow pt-10">
         <div className="px-5 flex flex-col items-center justify-center">
-          <h1 className="text-center">
-            <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">BuildGuidl Events Tracker</span>
-          </h1>
+          <div className="p-10">
+            <img src="/whispersbig.png" alt="buidlGuidl whispers" style={{ maxWidth: 350 }} />
+          </div>
+
           {connectedAddress ? (
             <>
               <div className="flex justify-center items-center space-x-2">
@@ -132,7 +132,10 @@ export default function EventPage({ params }: { params: { event: string } }) {
               </div>
               {isLoadingMember ? (
                 <div className="flex justify-center items-center space-x-2">
-                  <p className="my-2 font-medium">Checking if you are a member...</p>
+                  <p className="my-2 font-medium">
+                    <span className="loading loading-ring loading-xs"></span> Checking BuidlGuidl Membership...{" "}
+                    <span className="loading loading-ring loading-xs"></span>
+                  </p>
                 </div>
               ) : isMember ? (
                 <>
@@ -149,9 +152,9 @@ export default function EventPage({ params }: { params: { event: string } }) {
                       <div className="flex flex-col gap-3 self-center mb-4 text-center font-medium">
                         <p className="mb-0">
                           Thank you for attending <em className="font-bold">{selectedEventName}</em> and supporting
-                          BuidlGuidl.
+                          BuidlGuidl!!!
                         </p>
-                        <p className="mt-0">Please estimate your personal expense to make this happen.</p>
+                        <p className="mt-0">Please estimate your personal expense to make this happen:</p>
                       </div>
                       <div className="flex gap-3 self-center mb-4">
                         <label className="label">Amount (USD)</label>

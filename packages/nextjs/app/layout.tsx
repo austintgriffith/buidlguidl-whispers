@@ -12,16 +12,16 @@ const imageUrl = `${baseUrl}/thumbnail.jpg`;
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "BuildGuidl Events Tracker",
-    template: "%s | BuildGuidl Events Tracker",
+    default: "BuildGuidl Whispers",
+    template: "%s | BuildGuidl Whispers",
   },
-  description: "Built with 🏗 Scaffold-ETH 2",
+  description: "private, signed messages",
   openGraph: {
     title: {
-      default: "BuildGuidl Events Tracker",
-      template: "%s | BuildGuidl Events Tracker",
+      default: "BuildGuidl Whispers",
+      template: "%s | BuildGuidl Whispers",
     },
-    description: "Built with 🏗 Scaffold-ETH 2",
+    description: "private, signed messages",
     images: [
       {
         url: imageUrl,
@@ -32,13 +32,13 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: [imageUrl],
     title: {
-      default: "BuildGuidl Events Tracker",
-      template: "%s | BuildGuidl Events Tracker",
+      default: "BuildGuidl Whispers",
+      template: "%s | BuildGuidl Whispers",
     },
-    description: "Built with 🏗 Scaffold-ETH 2",
+    description: "private, signed messages",
   },
   icons: {
-    icon: [{ url: "/favicon.png", sizes: "32x32", type: "image/png" }],
+    icon: [{ url: "/whispers.png", sizes: "32x32", type: "image/png" }],
   },
 };
 
