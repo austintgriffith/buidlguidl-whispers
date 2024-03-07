@@ -22,7 +22,7 @@ export const POST = async (req: Request) => {
       domain: EIP_712_DOMAIN,
       types: EIP_712_TYPES__ADMIN_EXPENSES_MESSAGE,
       primaryType: "Message",
-      message: { action: "Event Expenses Show", event },
+      message: { action: "Event Create", event },
       signature: signature,
     });
 
@@ -35,24 +35,24 @@ export const POST = async (req: Request) => {
     }
 
     const eventSlug = generateSlug(event);
+
+    if (eventSlug.length === 0) {
+      return NextResponse.json({ verified: false, message: "Invalid event name" }, { status: 400 });
+    }
+
     const eventKey = `events-tracker-events-${eventSlug}`;
     const eventExists = await kv.get(eventKey);
 
-    if (!eventExists) {
-      return NextResponse.json({ verified: false, message: "Event does not exist" }, { status: 400 });
+    if (eventExists) {
+      return NextResponse.json({ verified: false, message: "Event already exists" }, { status: 400 });
     }
 
-    const setKey = `events-tracker-expenses-${eventSlug}`;
-    const rawExpenses = await kv.zrange(setKey, 0, 10000, { rev: true, withScores: true });
+    await kv.set(eventKey, event);
 
-    const expenses: { address: string; amount: number }[] = [];
+    const setKey = `events-tracker-events`;
+    await kv.sadd(setKey, event);
 
-    for (let i = 0; i < rawExpenses.length; i += 2) {
-      const address = rawExpenses[i] as string;
-      expenses.push({ address, amount: rawExpenses[i + 1] as number });
-    }
-
-    return NextResponse.json({ verified: true, expenses }, { status: 201 });
+    return NextResponse.json({ verified: true, created: true, slug: eventSlug }, { status: 201 });
   } catch (e) {
     console.log(e);
     return NextResponse.json({ verified: false, error: true }, { status: 500 });

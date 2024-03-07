@@ -14,7 +14,18 @@ export const EIP_712_TYPES__MESSAGE = {
   ],
 } as const;
 
-export const EIP_712_TYPES__ADMIN_MESSAGE = {
+export const EIP_712_TYPES__ADMIN_EXPENSES_MESSAGE = {
+  Message: [
+    { name: "action", type: "string" },
+    { name: "event", type: "string" },
+  ],
+} as const;
+
+export const EIP_712_TYPES__ADMIN_EVENTS_MESSAGE = {
+  Message: [{ name: "action", type: "string" }],
+} as const;
+
+export const EIP_712_TYPES__ADMIN_EVENT_NEW_MESSAGE = {
   Message: [
     { name: "action", type: "string" },
     { name: "event", type: "string" },
