@@ -16,7 +16,7 @@ const scaffoldConfig = {
 
   // The interval at which your front-end polls the RPC servers for new data
   // it has no effect if you only target the local network (default is 4000)
-  pollingInterval: 30000,
+  pollingInterval: 5000,
 
   // This is ours Alchemy's default API key.
   // You can get your own at https://dashboard.alchemyapi.io
@@ -38,7 +38,7 @@ const scaffoldConfig = {
    * 1. If the user was connected into a wallet before, on page reload reconnect automatically
    * 2. If user is not connected to any wallet:  On reload, connect to burner wallet if burnerWallet.enabled is true && burnerWallet.onlyLocal is false
    */
-  walletAutoConnect: true,
+  walletAutoConnect: false,
 
   adminAddresses: ["0x34aA3F359A9D614239015126635CE7732c18fDF3"],
 } as const satisfies ScaffoldConfig;
