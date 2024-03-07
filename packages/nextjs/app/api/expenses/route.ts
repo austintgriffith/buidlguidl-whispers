@@ -15,7 +15,7 @@ export const POST = async (req: Request) => {
   try {
     const { signature, signer, event, amount } = (await req.json()) as ReqBody;
     if (!signature || !signer || !event || !amount) {
-      return NextResponse.json({ verified: false }, { status: 400 });
+      return NextResponse.json({ verified: false, message: "Wrong parameters" }, { status: 400 });
     }
 
     const recoveredAddress = await recoverTypedDataAddress({
@@ -27,7 +27,7 @@ export const POST = async (req: Request) => {
     });
 
     if (recoveredAddress !== signer) {
-      return NextResponse.json({ verified: false }, { status: 401 });
+      return NextResponse.json({ verified: false, message: "Wrong signature" }, { status: 401 });
     }
 
     const bgUrl = "https://buidlguidl-v3.ew.r.appspot.com/builders";
@@ -47,7 +47,7 @@ export const POST = async (req: Request) => {
     }
 
     if (!isMember) {
-      return NextResponse.json({ verified: true, member: false }, { status: 403 });
+      return NextResponse.json({ verified: false, member: false, message: "Not a BuildGuild member" }, { status: 403 });
     }
 
     const eventSlug = generateSlug(event);
@@ -65,6 +65,6 @@ export const POST = async (req: Request) => {
     return NextResponse.json({ verified: true, member: true }, { status: 201 });
   } catch (e) {
     console.log(e);
-    return NextResponse.json({ verified: false }, { status: 500 });
+    return NextResponse.json({ verified: false, message: "Unexpected error" }, { status: 500 });
   }
 };

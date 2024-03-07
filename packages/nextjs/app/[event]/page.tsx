@@ -41,8 +41,12 @@ export default function EventPage({ params }: { params: { event: string } }) {
       });
 
       if (res.ok) {
-        const data = (await res.json()) as { verified: boolean };
-        notification.success(data.verified ? "Message Verified" : "Message Not Verified");
+        const data = (await res.json()) as { verified: boolean; message: string };
+        if (data.verified) {
+          notification.success("Expense Saved");
+        } else {
+          notification.error(data.message);
+        }
       } else {
         notification.error("Failed to verify message");
       }
