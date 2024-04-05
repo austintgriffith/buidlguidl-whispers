@@ -2,11 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { Address, RainbowKitCustomConnectButton } from "../../components/scaffold-eth";
+import { AddressInput } from "../../components/scaffold-eth/Input";
 import scaffoldConfig from "../../scaffold.config";
 import {
   EIP_712_DOMAIN,
   EIP_712_TYPES__ADMIN_EVENTS_MESSAGE,
   EIP_712_TYPES__ADMIN_EVENT_NEW_MESSAGE,
+  EIP_712_TYPES__ADMIN_EXPENSES_ADD_MESSAGE,
   EIP_712_TYPES__ADMIN_EXPENSES_MESSAGE,
 } from "../../utils/eip712";
 import { getParsedError, notification } from "../../utils/scaffold-eth";
@@ -19,7 +21,7 @@ const AdminHome: NextPage = () => {
 
   const { signTypedDataAsync, isLoading: isSigningEIP712Message } = useSignTypedData();
 
-  const [selectedEvent, setSelectedEvent] = useState<string>("ETHDenver 2024");
+  const [selectedEvent, setSelectedEvent] = useState<string>("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoadingAdmin, setLoadingAdmin] = useState(false);
   const [expenses, setExpenses] = useState<any[]>([]);
@@ -28,10 +30,11 @@ const AdminHome: NextPage = () => {
   const [newEvent, setNewEvent] = useState<string>("");
   const [newEventSlug, setNewEventSlug] = useState<string>("");
   const [eventCreated, setEventCreated] = useState<string>("");
+  const [newMemberAddress, setNewMemberAddress] = useState<string>("");
+  const [newMemberAmount, setNewMemberAmount] = useState<number>(0);
 
   const handleShowExpenses = async (event: string) => {
     try {
-      setSelectedEvent(event);
       const signature = await signTypedDataAsync({
         domain: EIP_712_DOMAIN,
         types: EIP_712_TYPES__ADMIN_EXPENSES_MESSAGE,
@@ -54,6 +57,7 @@ const AdminHome: NextPage = () => {
         const data = (await res.json()) as { verified: boolean; expenses: any[] };
         notification.success(data.verified ? "Message Verified" : "Message Not Verified");
         setExpenses(data.expenses);
+        setSelectedEvent(event);
       } else {
         notification.error("Failed to verify message");
       }
@@ -123,6 +127,53 @@ const AdminHome: NextPage = () => {
         setNewEventSlug(data.slug);
         setEventCreated(newEvent);
         setNewEvent("");
+      } else {
+        notification.error("Failed to verify message");
+      }
+    } catch (e) {
+      const parsedErrorMessage = getParsedError(e);
+      notification.error(parsedErrorMessage);
+    }
+  };
+
+  const handleAddMember = async () => {
+    try {
+      const signature = await signTypedDataAsync({
+        domain: EIP_712_DOMAIN,
+        types: EIP_712_TYPES__ADMIN_EXPENSES_ADD_MESSAGE,
+        primaryType: "Message",
+        message: {
+          action: "Event Expense Admin",
+          event: selectedEvent,
+          amount: BigInt(newMemberAmount),
+          address: newMemberAddress,
+        },
+      });
+
+      const res = await fetch("/api/admin/expense", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          signature,
+          signer: connectedAddress,
+          event: selectedEvent,
+          amount: newMemberAmount,
+          address: newMemberAddress,
+        }),
+      });
+
+      if (res.ok) {
+        const data = (await res.json()) as { verified: boolean; message: string };
+        if (data.verified) {
+          notification.success("Expense Saved");
+          setNewMemberAddress("");
+          setNewMemberAmount(0);
+          setExpenses([...expenses, { address: newMemberAddress, amount: newMemberAmount }]);
+        } else {
+          notification.error(data.message);
+        }
       } else {
         notification.error("Failed to verify message");
       }
@@ -279,6 +330,36 @@ const AdminHome: NextPage = () => {
                       >
                         Copy selected members to clipboard
                       </button>
+                    </div>
+                  )}
+                  {selectedEvent && (
+                    <div className="flex flex-col gap-3 self-center mb-4 mt-4">
+                      <h2 className="text-2xl font-bold text-center mt-4">Add Expense</h2>
+                      <div className="flex items-center">
+                        <label className="mr-4 align-middle">Member:</label>
+                        <AddressInput
+                          value={newMemberAddress}
+                          onChange={value => {
+                            setNewMemberAddress(value);
+                          }}
+                        />
+                      </div>
+                      <div className="flex items-center">
+                        <label className="mr-4 align-middle">Amount (USD):</label>
+                        <input
+                          type="number"
+                          className="input input-bordered w-48"
+                          placeholder="Amount (USD)"
+                          value={newMemberAmount}
+                          onChange={value => setNewMemberAmount(parseInt(value.target.value))}
+                        />
+                      </div>
+                      <div className="flex gap-3 self-center">
+                        <button className="btn btn-primary" disabled={isSigningEIP712Message} onClick={handleAddMember}>
+                          {isSigningEIP712Message && <span className="loading loading-spinner"></span>}
+                          Add
+                        </button>
+                      </div>
                     </div>
                   )}
                 </>

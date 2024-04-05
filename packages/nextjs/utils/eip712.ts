@@ -31,3 +31,12 @@ export const EIP_712_TYPES__ADMIN_EVENT_NEW_MESSAGE = {
     { name: "event", type: "string" },
   ],
 } as const;
+
+export const EIP_712_TYPES__ADMIN_EXPENSES_ADD_MESSAGE = {
+  Message: [
+    { name: "action", type: "string" },
+    { name: "event", type: "string" },
+    { name: "amount", type: "uint256" },
+    { name: "address", type: "address" },
+  ],
+} as const;
